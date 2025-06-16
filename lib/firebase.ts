@@ -1,15 +1,18 @@
-// lib/firebase.ts
 import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
+// Optional if using server-side environment variables
+import dotenv from 'dotenv';
+dotenv.config();
+
 const firebaseConfig = {
-  apiKey: "AIzaSyCbGGJaFQatN8wwTWpNgh1NHvPwY0_8f8M",
-  authDomain: "doit-duoph.firebaseapp.com",
-  projectId: "doit-duoph",
-  storageBucket: "doit-duoph.firebasestorage.app",
-  messagingSenderId: "356784956073",
-  appId: "1:356784956073:web:0ec6e605f7643ce1d3ffb8"
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID
 };
 
 const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
