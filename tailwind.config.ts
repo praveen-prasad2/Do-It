@@ -15,6 +15,9 @@ module.exports = {
       animation: {
         float: 'float 3s ease-in-out infinite',
       },
+       fontFamily: {
+        clover: ['clover', 'sans-serif'], // custom name you will use in class
+      },
     },
   },
   plugins: [],

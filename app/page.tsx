@@ -30,7 +30,7 @@ export default function AuthPage() {
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (user) => {
       setUser(user);
-      if (user) router.push("/home");
+      if (user) router.push("/dashboard");
     });
     return () => unsub();
   }, [router]);
@@ -54,7 +54,7 @@ export default function AuthPage() {
               photo: user.photoURL,
             });
             window.localStorage.removeItem("emailForSignIn");
-            router.push("/home");
+            router.push("/dashboard");
           })
           .catch((error) => {
             console.error("Error signing in with email link:", error);
@@ -75,7 +75,7 @@ export default function AuthPage() {
         photo: user.photoURL,
       });
 
-      router.push("/home");
+      router.push("/dashboard");
     } catch (err) {
       console.error(err);
     }
@@ -128,7 +128,7 @@ export default function AuthPage() {
         <Rocket className="text-yellow-500 w-8 h-8 mx-auto" />
       </div>
     </div>
-        <h2 className="text-[40px] text-white font-bold mt-10 text-center">
+        <h2 className="text-[40px] font-clover tracking-wide text-white font-bold mt-10 text-center">
           No More Procrastination,
           <br /> <span className="text-black">Do It</span> Now
         </h2>
