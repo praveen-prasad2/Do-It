@@ -7,6 +7,12 @@
   font-style: normal;
   font-display: swap;
 }
+/* @font-face {
+  font-family: "iBrand";
+  src: url("/fonts/ibrand.otf") format("otf");
+  font-style: normal;
+  font-display: swap;
+} */
 
 :root {
   --background: #ffffff;
