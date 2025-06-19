@@ -10,6 +10,10 @@ import { onAuthStateChanged, signOut, User } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import TaskModal from "@/app/components/TaskModal";
 
+import AllTasks from "@/app/components/AllTasks";
+import Settings from "@/app/components/Settings";
+import Dashboarcontent from "@/app/components/DashBoardContent";
+
 import Image from "next/image";
 
 const allTasksByDate: Record<string, any[]> = {
@@ -55,9 +59,10 @@ const completedTasks = [
 
 
 
+
 export default function Dashboard() {
   const [user, setUser] = useState<User | null>(null);
-  const [showModal, setShowModal] = useState(false);
+const [showModal, setShowModal] = useState(false);
 
   const [selectedDate, setSelectedDate] = useState<string>(() => {
     const today = new Date();
@@ -85,6 +90,9 @@ export default function Dashboard() {
   };
 
   const tasks = allTasksByDate[selectedDate] || [];
+const [activeSection, setActiveSection] = useState("dashboard");
+
+
 
   const handleLogout = async () => {
     await signOut(auth);
@@ -93,134 +101,47 @@ export default function Dashboard() {
 
   if (!user) return null;
 
+  
+
 
 
   return (
     <div className="min-h-screen bg-purple-50 flex">
-    <Sidebar user={user} onLogout={handleLogout} onAddTaskClick={() => setShowModal(true)} />
+  <Sidebar
+  user={user}
+  onLogout={handleLogout}
+  onAddTaskClick={() => setShowModal(true)}
+  onSectionChange={setActiveSection}
+  activeSection={activeSection}
+/>
+
+
+
+
 
       <main className="flex-1 p-8">
-        <div className="text-2xl font-[700] font-clover text-black mb-6 ">Welcome back, <span className="text-[#6c63ff]">{user.displayName?.split(' ')[0]}</span> 👋</div>
-        <div className="grid grid-cols-3 gap-6">
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex justify-between items-center mb-4">
-                <div className="text-lg font-semibold text-black">To-Do - {formatDateForHeader(selectedDate)}</div>
-                <input
-                  type="date"
-                  value={selectedDate}
-                  onChange={(e) => setSelectedDate(e.target.value)}
-                  className="text-sm border text-black border-gray-300 rounded px-2 py-1"
-                />
-              </div>
-              {tasks.length > 0 ? (
-                tasks.map((task, idx) => (
-                  <TaskCard key={idx} {...task} />
-                ))
-              ) : (
-                <div className="text-center p-4 bg-purple-100 border border-purple-300 rounded text-[#6c63ff] text-sm">
-                  🎉 No tasks scheduled for this day. Enjoy your free time!
-                </div>
-              )}
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-4">
-              <div className="text-lg font-semibold text-black mb-4">Task Status</div>
-<div className="flex gap-6 font-sans">
-
-  {/* Completed */}
-  <div className="flex flex-col items-center text-center">
-    <div className="relative w-20 h-20">
-      <svg className="transform -rotate-90" width="80" height="80">
-        <circle cx="40" cy="40" r="35" stroke="#d1fae5" strokeWidth="10" fill="none" />
-        <circle
-          cx="40"
-          cy="40"
-          r="35"
-          stroke="#10b981"
-          strokeWidth="10"
-          fill="none"
-          strokeDasharray="219.91"
-          strokeDashoffset={(1 - 0.84) * 219.91}
-          strokeLinecap="round"
-        />
-      </svg>
-      <div className="absolute inset-0 flex items-center justify-center text-green-600 text-sm font-bold">
-        84%
-      </div>
-    </div>
-    <div className="mt-2 text-sm text-green-700">✔️ Completed</div>
+  <div className="text-2xl font-[700] font-clover text-black mb-6">
+    Welcome back, <span className="text-[#6c63ff]">{user.displayName?.split(" ")[0]}</span> 👋
   </div>
 
-  {/* In Progress */}
-  <div className="flex flex-col items-center text-center">
-    <div className="relative w-20 h-20">
-      <svg className="transform -rotate-90" width="80" height="80">
-        <circle cx="40" cy="40" r="35" stroke="#dbeafe" strokeWidth="10" fill="none" />
-        <circle
-          cx="40"
-          cy="40"
-          r="35"
-          stroke="#3b82f6"
-          strokeWidth="10"
-          fill="none"
-          strokeDasharray="219.91"
-          strokeDashoffset={(1 - 0.46) * 219.91}
-          strokeLinecap="round"
-        />
-      </svg>
-      <div className="absolute inset-0 flex items-center justify-center text-blue-600 text-sm font-bold">
-        46%
-      </div>
+  {activeSection === "dashboard" && (
+  <>
+    <div className="grid grid-cols-3 gap-6">
+      <Dashboarcontent />
     </div>
-    <div className="mt-2 text-sm text-blue-700">🔄 In Progress</div>
-  </div>
-
-  {/* Not Started */}
-  <div className="flex flex-col items-center text-center">
-    <div className="relative w-20 h-20">
-      <svg className="transform -rotate-90" width="80" height="80">
-        <circle cx="40" cy="40" r="35" stroke="#fee2e2" strokeWidth="10" fill="none" />
-        <circle
-          cx="40"
-          cy="40"
-          r="35"
-          stroke="#ef4444"
-          strokeWidth="10"
-          fill="none"
-          strokeDasharray="219.91"
-          strokeDashoffset={(1 - 0.13) * 219.91}
-          strokeLinecap="round"
-        />
-      </svg>
-      <div className="absolute inset-0 flex items-center justify-center text-red-600 text-sm font-bold">
-        13%
-      </div>
-    </div>
-    <div className="mt-2 text-sm text-red-700">⏳ Not Started</div>
-  </div>
-
-</div>
-
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-4">
-              <div className="text-lg font-semibold mb-4 text-black">Completed Tasks</div>
-              {completedTasks.map((task, idx) => (
-                <CompletedTaskCard key={idx} {...task} />
-              ))}
-            </CardContent>
-          </Card>
-        </div>
-        {showModal && user && (
-  <TaskModal user={user} onClose={() => setShowModal(false)} />
+  </>
 )}
 
-      </main>
+{activeSection === "allTasks" && <AllTasks user={user} onEdit={() => {}} />}
+{/* {activeSection === "myTasks" && <MyTasks />}
+{activeSection === "vital" && <VitalTasks />}
+{activeSection === "categories" && <div>📁 Task Categories</div>} */}
+{activeSection === "settings" && <Settings />}
+
+</main>
+{showModal && user && (
+  <TaskModal user={user} onClose={() => setShowModal(false)} />
+)}
     </div>
   );
 }

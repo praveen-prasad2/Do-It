@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { User } from "firebase/auth";
-import { Plus } from "lucide-react"; // optional: use any icon you prefer
+import { addUserTask } from "@/lib/firestoreHelpers";
+
 
 interface Props {
   user: User;
@@ -27,23 +28,30 @@ export default function TaskModal({ user, onClose }: Props) {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const newTask = {
-      title,
-      description,
-      date,
-      priority,
-      category,
-      status,
-      createdAt: new Date(),
-    };
-    // const res = await addUserTask(user.uid, newTask);
-    // if (res.success) {
-    //   alert("Task added!");
-    //   onClose();
-    // }
+ const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  const newTask = {
+    title,
+    description,
+    date,
+    priority,
+    category,
+    status,
+    createdAt: new Date(),
   };
+
+  const res = await addUserTask(user.uid, newTask);
+
+  if (res.success) {
+    alert("Task added!");
+    onClose();
+    // Optionally: clear form fields here
+  } else {
+    alert("Something went wrong. Try again.");
+  }
+};
+
 
   const [showDropdown, setShowDropdown] = useState(false);
 
